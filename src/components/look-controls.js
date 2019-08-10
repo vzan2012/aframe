@@ -39,6 +39,7 @@ module.exports.Component = registerComponent('look-controls', {
     this.setupMouseControls();
     this.bindMethods();
     this.el.object3D.matrixAutoUpdate = false;
+    this.el.object3D.updateMatrix();
 
     this.savedPose = {
       position: new THREE.Vector3(),
@@ -342,6 +343,7 @@ module.exports.Component = registerComponent('look-controls', {
    * Save pose.
    */
   onEnterVR: function () {
+    if (!this.el.sceneEl.checkHeadsetConnected()) { return; }
     this.saveCameraPose();
     this.el.object3D.position.set(0, 0, 0);
     this.el.object3D.updateMatrix();
@@ -351,6 +353,7 @@ module.exports.Component = registerComponent('look-controls', {
    * Restore the pose.
    */
   onExitVR: function () {
+    if (!this.el.sceneEl.checkHeadsetConnected()) { return; }
     this.restoreCameraPose();
     this.previousHMDPosition.set(0, 0, 0);
   },

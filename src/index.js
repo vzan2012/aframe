@@ -25,6 +25,13 @@ if (!window.hasNativeWebXRImplementation && !window.hasNativeWebVRImplementation
 var utils = require('./utils/');
 var debug = utils.debug;
 
+if (utils.isIE11) {
+  // Polyfill `CustomEvent`.
+  require('custom-event-polyfill');
+  // Polyfill String.startsWith.
+  require('../vendor/starts-with-polyfill');
+}
+
 var error = debug('A-Frame:error');
 var warn = debug('A-Frame:warn');
 
@@ -82,17 +89,19 @@ require('./core/a-mixin');
 require('./extras/components/');
 require('./extras/primitives/');
 
-console.log('A-Frame Version: 0.8.2 (Date 2019-01-23, Commit #d54a738)');
-console.log('three Version:', pkg.dependencies['three']);
+console.log('A-Frame Version: 0.9.2 (Date 2019-08-08, Commit #82293865)');
+console.log('three Version (https://github.com/supermedium/three.js):',
+            pkg.dependencies['super-three']);
 console.log('WebVR Polyfill Version:', pkg.dependencies['webvr-polyfill']);
 
 module.exports = window.AFRAME = {
   AComponent: require('./core/component').Component,
   AEntity: AEntity,
   ANode: ANode,
-  ANIME: require('animejs'),
+  ANIME: require('super-animejs'),
   AScene: AScene,
   components: components,
+  coreComponents: Object.keys(components),
   geometries: require('./core/geometry').geometries,
   registerComponent: registerComponent,
   registerElement: require('./core/a-register-element').registerElement,

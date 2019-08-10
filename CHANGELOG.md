@@ -1,21 +1,99 @@
-## 0.9.0 (TBD)
+## 0.9.2 (May 6, 2019)
 
-Performance improvements.
-
-### Major Changes
-
-- Remove `<a-animation>` in favor of new animation component (#3678).
-- Bump to three.js r95 (f9f314).
-- Raycaster events such as `raycaster-intersected` no longer directly contain intersection data. Use `.getIntersection` function supplied in event detail or `el.components.raycaster.getIntersection(el)` to retrieve intersection data. Done to reduce garbage (a87e3b).
-- Disable link portal appearance by default (`link.visualAspectEnabled`), link component defaults to purely to listening to an event to trigger navigation (#3743).
-
-### Deprecations
+Follow-up fix to 0.9.1 for fixing `vrdisplayactivate` and link traversal flow.
 
 ### Fixes
 
+- Move `vrdisplayactivate` handler back earlier to fix auto entering VR in many cases (#4155).
+- Fix `vrdisplayactivate` and link traversal due to last build having outdated version our three.js fork.
+- Fix `Entity.destroy` not catching if entity is not attached to scenegraph (#4140).
+- Fix exiting fullscreen on Chrome m71+ (#4136).
+- Fix URL bar not hiding in iOS Safari in fullscreen (#4146).
+- Fix wrong sized canvas in iOS VR by preventing multiple `requestPresent` calls if already presenting (#4148).
+
+## 0.9.1 (April 17, 2019)
+
+Follow-up fixes and improvements to 0.9.0.
+
+Released Hot Module Replacement loader for A-Frame: https://github.com/supermedium/aframe-super-hot-loader
+
+### Major Changes
+
+- Detaching entity from scene will preserve component data. Add
+  `Entity.destroy()` method to clear components and return their memory to the
+  pool (#4121).
+- Use controller index to determine left / right controllers which may impact
+  cases like Vive Trackers. Will look to make this more robust soon (#4013).
+
+### Deprecations
+
+- Deprecate `utils.device.isOculusGo` in favor of `utils.device.isMobileVR` (#4032).
+
+### Fixes
+
+- Updated documentation guides for 0.9.0.
+- Fix text antialiasing from distance (#4039).
+- Improve `vrdisplayactivate` path for more robust navigation (#4093, 3c2f68e).
+- Clean up object requested from pool by component to prevent pollution of old keys from other schemas (#4016).
+- Fix initial camera position, rotation, scale potentially not getting applied (#4020).
+- Fix `utils.coordinates.stringify` for zeroed vectors (#4017).
+- Handle if both WebVR and both WebXR APIs are available (#4022).
+- Handle null device from WebXR (#4030).
+- Catch `navigator.xr.requestDevice` error (#4035).
+- Fix animation for custom vec3 properties (#4051).
+- Fix sound `onEnded` not setting `isPlaying` to false (#4061, #4097, #4101).
+- Fix new materials not getting applied to `obj-model` recursively (#4062).
+- Fix boolean values in `.flushToDOM` (#4069).
+- Hide navigation buttons on Android (#4090).
+- Fix Chrome gamepads by checking `getGamepads` on every tick for Chrome (#4116).
+
+### Enhancements
+
+- Add `Component.events` API to define event handlers that are automatically attached and detached depending on entity lifecycle (#4114).
+- Improve animation error message when passing invalid `animation.property` (#4122).
+- Have `Entity.remove` detach entity to match HTML element behavior (#4082).
+- Migrate `hand-controls` model to glTF (#3932).
+- Add `shadow.enabled` property to shadow system (#4040).
+- Add `renderer.alpha` property to renderer system (#4040).
+- Add `AFRAME.coreComponents` for a list of the core components (#4064).
+
+### Performance
+
+- Use a fork of anime.js that has memory improvements from Kevin (#4028).
+
+## 0.9.0 (February 7, 2019)
+
+Performance improvements, WebXR support, Inspector updates!
+
+We continued to battle test A-Frame to produce native-like VR experiences and
+continue to add large performance gains.  We have also introduced initial WebXR
+support! Although the spec is heavily in flux and yet to have feature parity
+with WebVR 1.1, we had A-Frame get a head start to help test it out and smooth
+out the changes.
+
+### Major Changes
+
+- Bump to three.js r101 on a branch with a few extra patches for WebXR support (f9f314).
+- WebXR support (#3875).
+- Remove `<a-animation>` in favor of new animation component (#3678).
+- Remove `collada-model` component (#3866).
+- Add `renderer.colorManagement` property (disabled by default) to accurately match colors against modeling tools, but may changes in scene colors when flipped on. `renderer.gammaFactor` will be set to 2.2. Call `scene.renderer.systems.applyColorCorrection` on `THREE.Color`s and `THREE.Texture`s to normalize changes (#3757).
+- Have raycasters only intersect against objects defined via `.setObject3D`. `raycaster.objects` should be specified (e.g., `objects: [data-raycastable] or objects: .raycastable`) because raycasting is expensive. `raycaster.recursive` property removed (#3980) but will default to be recursive only under objects defined via `.setObject3D` (#3652).
+- Add `renderer` component (#3757).
+- `antialias` attribute moved to `renderer.antialias`.
+- Raycaster events such as `raycaster-intersected` no longer directly contain intersection data. Use `.getIntersection` function supplied in event detail or `el.components.raycaster.getIntersection(el)` to retrieve intersection data. Done to reduce garbage (a87e3b).
+- Disable link portal appearance by default (`link.visualAspectEnabled`), link component defaults to purely to listening to an event to trigger navigation (#3743).
+
+### Fixes
+
+- Frame-independent easing for `wasd-controls` to prevent judders during framedrops (#3830).
+- Enable matrix auto updates for `tracked-controls` to fix children of camera and controllers not following parent (#3867).
+- Fix removing mixins not removing components (#3982).
+- Fix timing issues with mixins on still-initializing entities (#3859).
 - setPoseTarget to underlying object3D to fix issues with entities as child of camera (#3820).
 - Don't disable `matrixAutoUpdate` for tracked-controls outside VR (643fdc).
 - Render spectator view after VR submit frame (#3577).
+- Fix mouse cursor events not being re-enabled on resume (#3904).
 - Allow components to write to camera Z rotation when look-controls enabled (9a78a)
 - Clear raycaster intersections when toggling disabled (#3594).
 - Postpone renderer until scene is appended to DOM (#3574).
@@ -28,11 +106,26 @@ Performance improvements.
 - Update position, rotation, scale components when calling `.setAttribute` on them (#3738).
 - Update canvas bounds for mouse cursor on renderer resize (a4cf08).
 - Fix controller reconnecting on Oculus Go and GearVR (dc8662).
+- Fix playing sound on event with `sound.on` (#3844).
+- Fix Chrome WebView (#3852).
+- Fix raycaster not grabbing all entities when `raycaster.objects` is not set. But you should always set it (#3840).
+- Fix WebVR polyfill buffer scale override (#3863).
+- Fix text when used with other geometry types (#3909).
+- Fix `daydream-controls` trigger not working with cursor by default (#3916).
+- Fix accessing Inspector in pointer lock mode (#3947).
+- Fix mouse cursor not emitting click when fuse is set (#4000).
+- Fix screenshots (#3998).
+- Fix camera offset getting applied when entering 2D fullscreen (#3902).
 
 ### Enhancements
 
 - Add `oculus-go-controls`, thanks Oculus! (cbbe75)
+- Add `vive-focus-controls` (#3876).
 - Add `loading-screen` component (#3760).
+- Add `?inspector={selector}` and `Entity.inspect()` to automatically launch Inspector and focus on entity (#3894).
+- Add `renderer.highRefreshRate` to enable 72hz mode on Oculus Browser (#3967).
+- Add `tracked-controls.autoHide` property to configure whether controllers automatically hide when connected or disconnected (#3912).
+- Enable multiple raycasters on an entity (fc18cd).
 - Support custom enter VR buttons through vr-mode-ui (#3606).
 - Add `material.blending` property (#3543).
 - Add `light.shadowRadius` property (21b38).
@@ -44,11 +137,16 @@ Performance improvements.
 - Switch to jsdelivr with rawgit going away.
 - Support preprocessing of sound in `sound.playSound()` (2b2819).
 - Consolidate fullscreen styles under single CSS class (`html.a-fullscreen`) (#3828).
+- Emit `displayconnected` event when headset connected (#3918).
+- Enable antialias by default on Oculus Go (#3942).
+- Update to webvr-polyfill v0.10.10 (#3993).
 
 ### Performance
 
 - Large refactor of core component update path, reducing memory allocation and using object pooling (#3772).
+- Skip `buildData` if updating component directly. 2x speed boost on `.setAttribute` (#3835).
 - Remove spamming `navigator.getGamepad` calls in tracked-controls (#3816).
+- Optimize coordinates / vector utilities (#3908).
 - Remove object allocation in `.setAttribute(component, propertyName, value)` (#3812).
 - Simplify text shader hacks and make text alpha look prettier (#3557).
 - Remove garbage and bubbling from tracked-controls (#3589).
@@ -61,6 +159,54 @@ Performance improvements.
 - Remove garbage in sound component (2b2819).
 - Improve grabbing class cursor performance in 2D look-controls (#3790).
 - Remove unused and redundant mixin observers (#3831).
+- Add warning to developers to specify `raycaster.objects` (#3839).
+- Cache asset property type regex (#3854).
+
+### Inspector
+
+Kevin spent some time getting the Inspector into ship shape.
+
+#### Major Changes
+
+[A-Frame Watcher]: https://supermedium.com/aframe-watcher/
+
+- Introducing the [A-Frame Watcher] to sync updates of entities with IDs from Inspector to HTML files.
+- Remove HTML exporter.
+- Remove old A-Frame Registry code.
+- Remove broken Uploadcare uploader.
+- Remove motion capture tools.
+
+#### Enhancements
+
+- Orthographic cameras.
+- Improve raycasting to picking entities.
+- Syntax highlighting of entities.
+- Highlight and describe entities on viewport bar when hovering.
+- Added `?inspector={selector}` to automatically launch Inspector and focus on entity.
+- Show bounding box of selected entities.
+- Show with icon what entities contain text in scenegraph.
+- Sort component properties alphabetically.
+- Display class names on entity panel.
+- Only show camera and light helpers when respective entity is selected.
+- Improve position when focusing on entity.
+- Polish components panel.
+- Center editor controls to the scene camera position.
+- Support arrow keys for number widgets.
+- .glb export.
+- Add `o` shortcut to toggle transform widget.
+- Add `esc` shortcut to unselect entity.
+- Refactor most everything (modularize, data flow, Stylus, Prettier).
+- Tweak grid colors.
+- Bigger checkboxes.
+- Fix color picker in components panel.
+- Fix display of mixins.
+
+#### Performance
+
+- Don't load 50 images when opening the Inspector.
+- Optimize and fix helpers for position, rotation, scale.
+- Speed up scene graph search.
+- Remove global mutation observer.
 
 ## 0.8.2 (April 15, 2018)
 
@@ -105,7 +251,7 @@ Performance improvements.
 
 - Updated to three.js r90.
 - Ability to update three.js Object3D position, rotation, scale, and visible directly while being in sync with A-Frame. (#3245)
-- ~~Bubble `object3dset` and `object3dremove` events no longer bubble. (#3220)~~
+- Bubble `object3dset` and `object3dremove` events no longer bubble. (#3220)
 - Raycaster intersection and cleared events now emitted once per event, not on every frame. (#3126)
 - Remove VREffect / VRControls for three.js WebGLRenderer API. VR camera pose is managed by three.js. (#3152, #3327)
 - Removed geometry.mergeTo. (#3191)

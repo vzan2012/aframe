@@ -47,6 +47,9 @@ are constrained to looking around and wiggling the controller.
 [Google Daydream]: https://vr.google.com/daydream/
 [Samsung GearVR]: http://www.samsung.com/global/galaxy/gear-vr/
 [Windows Mixed Reality]: https://developer.microsoft.com/en-us/windows/mixed-reality/
+[Oculus Go]: https://www.oculus.com/go
+[Vive Focus]: https://enterprise.vive.com/us/vivefocus/
+[Oculus Quest]: https://www.oculus.com/quest
 
 | Headset                 | Platform   | Positional Tracking | Controllers        | Controller Positional Tracking |
 |-------------------------|------------|---------------------|--------------------|--------------------------------|
@@ -57,7 +60,7 @@ are constrained to looking around and wiggling the controller.
 | [Windows Mixed Reality] | PC         | :white_check_mark:  | :white_check_mark: | :white_check_mark:             |
 | [Oculus Go]             | Standalone | :x:                 | :white_check_mark: | :x:                            |
 | [Vive Focus]            | Standalone | :x:                 | :white_check_mark: | :x:                            |
-| Oculus Quest            | Standalone | :white_check_mark:  | :white_check_mark: | :white_check_mark:             |
+| [Oculus Quest]            | Standalone | :white_check_mark:  | :white_check_mark: | :white_check_mark:             |
 
 ## What is WebVR?
 
@@ -69,6 +72,13 @@ A-Frame uses the WebVR API to gain access to VR headset sensor data (position,
 orientation) to transform the camera and to render content directly to VR
 headsets. Note that WebVR, which provides data, should not be confused nor
 conflated with WebGL, which provides graphics and rendering.
+
+## What Browsers Support VR?
+
+Including [Supermedium](https://supermedium.com) and
+[Exokit](https://github.com/exokitxr/exokit):
+
+<iframe src="https://caniuse.com/#search=webxr" height="480px" width="100%"></iframe>
 
 ## Where Does A-Frame Want to Take WebVR?
 
@@ -88,7 +98,7 @@ landscape.
 
 ## Which Platforms Does A-Frame Support?
 
-A-Frame supports mostly all platforms through browsers General platforms that
+A-Frame supports almost all platforms through browsers. General platforms that
 A-Frame supports include:
 
 - VR on desktop with a headset
@@ -109,6 +119,7 @@ supports include:
 
 - HTC Vive
 - Oculus Rift
+- Oculus Quest
 - Oculus Go
 - Google Daydream
 - Samsung GearVR
@@ -156,3 +167,4 @@ specifically those that support WebGL including:
 - Chrome
 - Safari
 - Edge
+- Internet Explorer 11

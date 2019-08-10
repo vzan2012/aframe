@@ -24,6 +24,8 @@ var CANVAS_EVENTS = {
   UP: ['mouseup', 'touchend']
 };
 
+var CANVAS_HOVER_CLASS = 'a-mouse-cursor-hover';
+
 /**
  * Cursor component. Applies the raycaster component specifically for starting the raycaster
  * from the camera and pointing from camera's facing direction, and then only returning the
@@ -43,6 +45,7 @@ module.exports.Component = registerComponent('cursor', {
     downEvents: {default: []},
     fuse: {default: utils.device.isMobile()},
     fuseTimeout: {default: 1500, min: 0},
+    mouseCursorStylesEnabled: {default: true},
     upEvents: {default: []},
     rayOrigin: {default: 'entity', oneOf: ['mouse', 'entity']}
   },
@@ -54,6 +57,7 @@ module.exports.Component = registerComponent('cursor', {
     this.cursorDownEl = null;
     this.intersectedEl = null;
     this.canvasBounds = document.body.getBoundingClientRect();
+    this.isCursorDown = false;
 
     // Debounce.
     this.updateCanvasBounds = utils.debounce(function updateCanvasBounds () {
@@ -220,6 +224,7 @@ module.exports.Component = registerComponent('cursor', {
    * Trigger mousedown and keep track of the mousedowned entity.
    */
   onCursorDown: function (evt) {
+    this.isCursorDown = true;
     // Raycast again for touch.
     if (this.data.rayOrigin === 'mouse' && evt.type === 'touchstart') {
       this.onMouseMove(evt);
@@ -239,6 +244,11 @@ module.exports.Component = registerComponent('cursor', {
    *   in case user mousedowned one entity, dragged to another, and mouseupped.
    */
   onCursorUp: function (evt) {
+    if (!this.isCursorDown) { return; }
+
+    this.isCursorDown = false;
+
+    var data = this.data;
     this.twoWayEmit(EVENTS.MOUSEUP);
 
     // If intersected entity has changed since the cursorDown, still emit mouseUp on the
@@ -248,7 +258,8 @@ module.exports.Component = registerComponent('cursor', {
       this.cursorDownEl.emit(EVENTS.MOUSEUP, this.intersectedEventDetail);
     }
 
-    if (!this.data.fuse && this.intersectedEl && this.cursorDownEl === this.intersectedEl) {
+    if ((!data.fuse || data.rayOrigin === 'mouse') &&
+        this.intersectedEl && this.cursorDownEl === this.intersectedEl) {
       this.twoWayEmit(EVENTS.CLICK);
     }
 
@@ -315,6 +326,10 @@ module.exports.Component = registerComponent('cursor', {
     intersectedEl.addState(STATES.HOVERED);
     this.twoWayEmit(EVENTS.MOUSEENTER);
 
+    if (this.data.mouseCursorStylesEnabled && this.data.rayOrigin === 'mouse') {
+      this.el.sceneEl.canvas.classList.add(CANVAS_HOVER_CLASS);
+    }
+
     // Begin fuse if necessary.
     if (data.fuseTimeout === 0 || !data.fuse) { return; }
     cursorEl.addState(STATES.FUSING);
@@ -339,6 +354,10 @@ module.exports.Component = registerComponent('cursor', {
     cursorEl.removeState(STATES.HOVERING);
     cursorEl.removeState(STATES.FUSING);
     this.twoWayEmit(EVENTS.MOUSELEAVE);
+
+    if (this.data.mouseCursorStylesEnabled && this.data.rayOrigin === 'mouse') {
+      this.el.sceneEl.canvas.classList.remove(CANVAS_HOVER_CLASS);
+    }
 
     // Unset intersected entity (after emitting the event).
     this.intersectedEl = null;
