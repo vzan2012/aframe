@@ -85,6 +85,7 @@ module.exports.Component = registerComponent('screenshot', {
 
   getRenderTarget: function (width, height) {
     return new THREE.WebGLRenderTarget(width, height, {
+      encoding: THREE.sRGBEncoding,
       minFilter: THREE.LinearFilter,
       magFilter: THREE.LinearFilter,
       wrapS: THREE.ClampToEdgeWrapping,
@@ -135,6 +136,7 @@ module.exports.Component = registerComponent('screenshot', {
     var size;
     var camera;
     var cubeCamera;
+    var cubeRenderTarget;
     // Configure camera.
     if (projection === 'perspective') {
       // Quad is only used in equirectangular mode. Hide it in this case.
@@ -145,9 +147,16 @@ module.exports.Component = registerComponent('screenshot', {
     } else {
       // Use ortho camera.
       camera = this.camera;
+      cubeRenderTarget = new THREE.WebGLCubeRenderTarget(
+        Math.min(this.cubeMapSize, 2048),
+        {
+          format: THREE.RGBFormat,
+          generateMipmaps: true,
+          minFilter: THREE.LinearMipmapLinearFilter,
+          encoding: THREE.sRGBEncoding
+        });
       // Create cube camera and copy position from scene camera.
-      cubeCamera = new THREE.CubeCamera(el.camera.near, el.camera.far,
-                                        Math.min(this.cubeMapSize, 2048));
+      cubeCamera = new THREE.CubeCamera(el.camera.near, el.camera.far, cubeRenderTarget);
       // Copy camera position into cube camera;
       el.camera.getWorldPosition(cubeCamera.position);
       el.camera.getWorldQuaternion(cubeCamera.quaternion);
@@ -169,31 +178,31 @@ module.exports.Component = registerComponent('screenshot', {
    * Maintained for backwards compatibility.
    */
   capture: function (projection) {
-    var isVREnabled = this.el.renderer.vr.enabled;
+    var isVREnabled = this.el.renderer.xr.enabled;
     var renderer = this.el.renderer;
     var params;
     // Disable VR.
-    renderer.vr.enabled = false;
+    renderer.xr.enabled = false;
     params = this.setCapture(projection);
     this.renderCapture(params.camera, params.size, params.projection);
     // Trigger file download.
     this.saveCapture();
     // Restore VR.
-    renderer.vr.enabled = isVREnabled;
+    renderer.xr.enabled = isVREnabled;
   },
 
   /**
    * Return canvas instead of triggering download (e.g., for uploading blob to server).
    */
   getCanvas: function (projection) {
-    var isVREnabled = this.el.renderer.vr.enabled;
+    var isVREnabled = this.el.renderer.xr.enabled;
     var renderer = this.el.renderer;
     // Disable VR.
     var params = this.setCapture(projection);
-    renderer.vr.enabled = false;
+    renderer.xr.enabled = false;
     this.renderCapture(params.camera, params.size, params.projection);
     // Restore VR.
-    renderer.vr.enabled = isVREnabled;
+    renderer.xr.enabled = isVREnabled;
     return this.canvas;
   },
 

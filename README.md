@@ -30,7 +30,18 @@
   <a href="https://aframe.io/slack-invite/">Slack</a>
   &mdash;
   <a href="https://aframe.io/blog/">Blog</a>
+  &mdash;
+  <a href="https://aframe.io/subscribe/">Newsletter</a>
 </div>
+
+<h3 align="center">Special Sponsors</h3>
+<!--special start-->
+<p align="center">
+  <a href="https://planetvoodoo.org/" target="_blank">
+    <img width="120px" src="https://user-images.githubusercontent.com/39342/112707090-da492580-8e65-11eb-88c5-be39f48544f6.jpg">
+  </a>
+</p>  
+<!--special end-->
 
 ## Examples
 
@@ -58,8 +69,7 @@
 ## Features
 
 :eyeglasses: **Virtual Reality Made Simple**: A-Frame handles the 3D and WebVR
-boilerplate required to get running across platforms including mobile, desktop,
-Vive, and Rift just by dropping in `<a-scene>`.
+boilerplate required to get running across platforms including mobile, desktop, Vive, and Rift just by dropping in `<a-scene>`.
 
 :heart: **Declarative HTML**: HTML is easy to read and copy-and-paste. Since
 A-Frame can be used from HTML, A-Frame is accessible to everyone: web
@@ -95,15 +105,14 @@ mountains, speech recognition, or teleportation!
 ### Example
 
 Build VR scenes in the browser with just a few lines of HTML! To start playing
-and publishing now, remix the starter example on 
-:
+and publishing now, remix the starter example on:
 
 [![Remix](https://cloud.githubusercontent.com/assets/674727/24572421/688f7fc0-162d-11e7-8a35-b02bc050c043.jpg)](https://glitch.com/~aframe) [![Fork](https://user-images.githubusercontent.com/39342/52831020-d42dcb80-3087-11e9-833f-2d6191c69eb9.png)](https://repl.it/@dmarcos/aframe)
 
 ```html
 <html>
   <head>
-    <script src="https://aframe.io/releases/0.9.2/aframe.min.js"></script>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
   </head>
   <body>
     <a-scene>
@@ -118,7 +127,7 @@ and publishing now, remix the starter example on
 ```
 
 With A-Frame's [entity-component
-architecture](https://aframe.io/docs/0.9.2/introduction/entity-component-system.html), we can drop in community
+architecture](https://aframe.io/docs/1.2.0/introduction/entity-component-system.html), we can drop in community
 components from the ecosystem (e.g., ocean, physics) and plug them into our
 objects straight from HTML:
 
@@ -127,10 +136,10 @@ objects straight from HTML:
 ```html
 <html>
   <head>
-    <script src="https://aframe.io/releases/0.9.2/aframe.min.js"></script>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <script src="https://unpkg.com/aframe-particle-system-component@1.0.x/dist/aframe-particle-system-component.min.js"></script>
     <script src="https://unpkg.com/aframe-extras.ocean@%5E3.5.x/dist/aframe-extras.ocean.min.js"></script>
-    <script src="https://unpkg.com/aframe-gradient-sky@1.0.4/dist/gradientsky.min.js"></script>
+    <script src="https://unpkg.com/aframe-gradient-sky@1.2.0/dist/gradientsky.min.js"></script>
   </head>
   <body>
     <a-scene>
@@ -158,11 +167,11 @@ objects straight from HTML:
 
 ### Builds
 
-To use the latest stable build of A-Frame, include [`aframe.min.js`](https://aframe.io/releases/0.9.2/aframe.min.js):
+To use the latest stable build of A-Frame, include [`aframe.min.js`](https://aframe.io/releases/1.2.0/aframe.min.js):
 
 ```js
 <head>
-  <script src="https://aframe.io/releases/0.9.2/aframe.min.js"></script>
+  <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
 </head>
 ```
 
@@ -204,6 +213,7 @@ For questions and support, [ask on StackOverflow](https://stackoverflow.com/ques
 - To hang out with the community, [join the A-Frame Slack](https://aframe.io/slack-invite/).
 - [Follow `A Week of A-Frame` on the A-Frame blog](https://aframe.io/blog).
 - [Follow @aframevr on Twitter](https://twitter.com/aframevr).
+- [Subscribe to the Newsletter](https://aframe.io/subscribe/).
 
 And get in touch with the maintainers!
 
@@ -214,6 +224,8 @@ And get in touch with the maintainers!
 ## Contributing
 
 Get involved! Check out the [Contributing Guide](CONTRIBUTING.md) for how to get started.
+
+You can also support development by [buying a gorgeous A-Frame t-shirt with exclusive designs](https://teespring.com/stores/aframe)
 
 ## License
 
